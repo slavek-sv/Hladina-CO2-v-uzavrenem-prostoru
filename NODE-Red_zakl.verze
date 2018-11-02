@@ -1,0 +1,456 @@
+[
+    {
+        "id": "2c41a2bd.aa36ae",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "2e6bf3f.535d30c",
+        "type": "mqtt in",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "node/climate-monitor:0/co2-meter/-/concentration",
+        "qos": "2",
+        "broker": "e7a25080.4a081",
+        "x": 180,
+        "y": 660,
+        "wires": [
+            [
+                "18ec136e.6de8bd",
+                "4a5971c7.0c018",
+                "429dc076.fec59",
+                "e784469e.b523f8",
+                "a1c3f896.d39988"
+            ]
+        ]
+    },
+    {
+        "id": "18ec136e.6de8bd",
+        "type": "function",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Ovl.rele.dle CO2 ve sklepě",
+        "func": "var o = msg.payload;\nif (o >= 4500){\n    msg.topic = \"node/co2-monitor:0/relay/-/state/set\";\n    msg.payload = \"true\";\n}\nif (o < 4500){\n    msg.topic = \"node/co2-monitor:0/relay/-/state/set\";\n    msg.payload = \"false\";\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 520,
+        "y": 700,
+        "wires": [
+            [
+                "42547ba5.025d94"
+            ]
+        ]
+    },
+    {
+        "id": "42547ba5.025d94",
+        "type": "mqtt out",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "657bd349.2dfb2c",
+        "x": 710,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "4a5971c7.0c018",
+        "type": "function",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Ovl.LED.dle urovně CO2",
+        "func": "var o = msg.payload;\nvar hladina = msg.payload; // uroveň CO2\nvar max = 144; // počet LED diod\nvar proc;\nvar vysledek , zbytek ;\n\nproc = 5000/max; // číslo \"5000\" je hodnota pro rozsvícení všech LED červeně\nvysledek = hladina / proc;\nvysledek = Math.ceil(vysledek);\nzbytek = max - vysledek ;\n\nmsg.topic = \"node/co2-monitor:0/led-strip/-/compound/set\";\nif (hladina <= 2000){\n    msg.payload = \"[\" + vysledek + \", \\\"#ffff00\\\" , \" + zbytek + \", \\\"#00ff00\\\" ]\"\n}\n\nif (hladina > 2000){\n    msg.payload = \"[\" + vysledek + \", \\\"#ff0000\\\" , \" + zbytek + \", \\\"#00ff00\\\" ]\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 760,
+        "wires": [
+            [
+                "42547ba5.025d94"
+            ]
+        ]
+    },
+    {
+        "id": "429dc076.fec59",
+        "type": "function",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Ovl.LED. nastavení úrovně jasu",
+        "func": "msg.topic = \"node/co2-monitor:0/led-strip/-/brightness/set\";\nmsg.payload = 3 ; //lze nastavit v rozsahu 1 až 100\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 640,
+        "wires": [
+            [
+                "42547ba5.025d94"
+            ]
+        ]
+    },
+    {
+        "id": "61ab7161.78a18",
+        "type": "mqtt in",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "#",
+        "qos": "2",
+        "broker": "83d289e7.664f68",
+        "x": 210,
+        "y": 40,
+        "wires": [
+            [
+                "c033982f.974bf8"
+            ]
+        ]
+    },
+    {
+        "id": "c033982f.974bf8",
+        "type": "debug",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 450,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c59ce3dd.8a7c",
+        "type": "inject",
+        "z": "2c41a2bd.aa36ae",
+        "name": "All gateway info",
+        "topic": "gateway/all/info/get",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 260,
+        "y": 120,
+        "wires": [
+            [
+                "7e000278.d405ec"
+            ]
+        ]
+    },
+    {
+        "id": "7e000278.d405ec",
+        "type": "mqtt out",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "83d289e7.664f68",
+        "x": 450,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "b97639f3.994138",
+        "type": "mqtt out",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "83d289e7.664f68",
+        "x": 350,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "874783fc.581da",
+        "type": "inject",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Pairing mode start",
+        "topic": "gateway/usb-dongle/pairing-mode/start",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "b97639f3.994138"
+            ]
+        ]
+    },
+    {
+        "id": "540d62.f19342a",
+        "type": "inject",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Pairing mode stop",
+        "topic": "gateway/usb-dongle/pairing-mode/stop",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "b97639f3.994138"
+            ]
+        ]
+    },
+    {
+        "id": "689bfc1a.2a0994",
+        "type": "inject",
+        "z": "2c41a2bd.aa36ae",
+        "name": "List of paired nodes",
+        "topic": "gateway/usb-dongle/nodes/get",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "b97639f3.994138"
+            ]
+        ]
+    },
+    {
+        "id": "4cf218b7.a6efa8",
+        "type": "inject",
+        "z": "2c41a2bd.aa36ae",
+        "name": "purge all nodes",
+        "topic": "gateway/usb-dongle/nodes/purge",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 140,
+        "y": 400,
+        "wires": [
+            [
+                "b97639f3.994138"
+            ]
+        ]
+    },
+    {
+        "id": "2e66948d.1f912c",
+        "type": "comment",
+        "z": "2c41a2bd.aa36ae",
+        "name": "usb-dongle",
+        "info": "",
+        "x": 100,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e784469e.b523f8",
+        "type": "ui_gauge",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Koncentrace CO2",
+        "group": "6e1ce324.c1355c",
+        "order": 1,
+        "width": "",
+        "height": "",
+        "gtype": "gage",
+        "title": "",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "10000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "2500",
+        "seg2": "4000",
+        "x": 590,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "a1c3f896.d39988",
+        "type": "ui_chart",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Graf CO2 ",
+        "group": "6e1ce324.c1355c",
+        "order": 2,
+        "width": "",
+        "height": "",
+        "label": "",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Nejsou načtena data pro graf",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "604800",
+        "cutout": "",
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 560,
+        "y": 580,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "784204af.cf401c",
+        "type": "comment",
+        "z": "2c41a2bd.aa36ae",
+        "name": "Snímač - CO2 ",
+        "info": "",
+        "x": 60,
+        "y": 455,
+        "wires": []
+    },
+    {
+        "id": "253039a3.c9d026",
+        "type": "mqtt in",
+        "z": "2c41a2bd.aa36ae",
+        "name": "",
+        "topic": "node/climate-monitor:0/battery/-/voltage",
+        "qos": "1",
+        "broker": "6462be8f.db07c",
+        "x": 150,
+        "y": 500,
+        "wires": [
+            [
+                "44880d55.a368b4"
+            ]
+        ]
+    },
+    {
+        "id": "44880d55.a368b4",
+        "type": "ui_gauge",
+        "z": "2c41a2bd.aa36ae",
+        "name": "baterie CO2",
+        "group": "6e1ce324.c1355c",
+        "order": 4,
+        "width": "",
+        "height": "",
+        "gtype": "gage",
+        "title": "Napětí baterie",
+        "label": "V",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "6.6",
+        "colors": [
+            "#f10712",
+            "#e6e600",
+            "#0ef60c"
+        ],
+        "seg1": "5",
+        "seg2": "6",
+        "x": 570,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e7a25080.4a081",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "657bd349.2dfb2c",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "83d289e7.664f68",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "6e1ce324.c1355c",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "5c373299.f4412c",
+        "order": 1,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "6462be8f.db07c",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "5c373299.f4412c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Uzavřený prostor",
+        "icon": "dashboard",
+        "order": 2
+    }
+]
