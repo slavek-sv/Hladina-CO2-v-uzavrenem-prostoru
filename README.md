@@ -1,4 +1,4 @@
-# Hladina-CO2-v-uzavrenem-prostoru
+# Hlídání hladiny CO2 v uzavřeném prostoru
 
 Detekce množství CO2 v daném prostoru a následná vizuální signalizace je provedena pomocí stavebnice BigClown od společnosti Hardwario s.r.o. <br>
 V tomto projektu je potřeba využít tyto díly: <br>
