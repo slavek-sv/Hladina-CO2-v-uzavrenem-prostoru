@@ -6,7 +6,7 @@ V tomto projektu je potřeba využít tyto díly: <br>
 <ul>CO2 Monitor Kit</ul>
 <ul>Power Controller Kit</ul>
 <ul>LED Strip RGBW 1m 144 LED</ul>
-<ul>a hlavně Raspberry Pi, doporučuji rovnou koupit "3 Model B" nebo "3 Model B+"</ul>
+<ul>a hlavně Raspberry Pi, doporučuji rovnou koupit "Raspberry Pi 3 Model B" nebo "Raspberry Pi 3 Model B+"</ul>
   
 Dále je možné na relé, které je součástí Power Controller Kit-u připojit akustickou signalizaci nebo ovládat zobrazení varování před vstupem do nebezpečného prostru
 <br>
